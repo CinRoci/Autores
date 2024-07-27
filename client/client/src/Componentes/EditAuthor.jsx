@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';  
 import axios from 'axios';  
-import { useParams, useHistory } from 'react-router-dom';  
+import { useParams, useNavigate } from 'react-router-dom';  
 import ErrorMessage from './ErrorMessage';
+import SuccessMessage from './SuccessMessage';
 
 const EditAuthor = () => {  
     const { id } = useParams();  
-    const history = useHistory();  
+    const navigate = useNavigate();  
     const [author, setAuthor] = useState({ name: '', quote: '' });  
     const [error, setError] = useState('');  
+    const [success, setSuccess]= useState('');
     const [loading, setLoading] = useState(true);  
     const [updating, setUpdating] = useState(false);  
 
@@ -29,13 +31,14 @@ const EditAuthor = () => {
     const handleSubmit = async (e) => {  
         e.preventDefault();  
         setError('');  
-        setUpdating(true);  
+        setUpdating(true);
+      
 
         try {  
             await axios.put(`http://localhost:5000/api/authors/${id}`, author);  
             // Agregar mensaje de éxito o redirigir  
             alert('Author updated successfully.');  
-            history.push('/authors'); // Redirigir a la lista de autores  
+            navigate.push('/authors'); // Redirigir a la lista de autores  
         } catch (err) {  
             setError(err.response.data.errors.map(err => err.msg).join(', '));  
         } finally {  
